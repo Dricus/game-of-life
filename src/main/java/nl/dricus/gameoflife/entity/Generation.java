@@ -44,7 +44,7 @@ public class Generation {
 				aliveNeighborCount[arrayIndex(col, row)] += add;
 			}
 		}
-		aliveNeighborCount[arrayIndex(x, y)]--;
+		aliveNeighborCount[arrayIndex(x, y)] -= add;
 	}
 
 	private int arrayIndex(int x, int y) {

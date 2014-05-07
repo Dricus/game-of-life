@@ -223,6 +223,7 @@ public class GenerationTest {
 		assertThat(sut.getLiveNeighborCount(1, 0), is(4));
 		assertThat(sut.getLiveNeighborCount(2, 0), is(2));
 		assertThat(sut.getLiveNeighborCount(0, 1), is(4));
+		assertThat(sut.getLiveNeighborCount(1, 1), is(8));
 		assertThat(sut.getLiveNeighborCount(2, 1), is(4));
 		assertThat(sut.getLiveNeighborCount(0, 2), is(2));
 		assertThat(sut.getLiveNeighborCount(1, 2), is(4));
