@@ -10,14 +10,14 @@ public class GenerationTest {
 	private Generation sut;
 
 	@Test
-	public void testOneByOneInitialState() {
+	public void oneByOneInitialState() {
 		createGeneration(1, 1);
 
 		assertThat(sut.isCellAlive(0, 0), is(false));
 	}
 
 	@Test
-	public void testOneByOneResurrect() {
+	public void oneByOneResurrect() {
 		createGeneration(1, 1);
 
 		sut.resurrectCell(0, 0);
@@ -26,7 +26,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testTwoByOneResurrect() {
+	public void twoByOneResurrect() {
 		createGeneration(2, 1);
 
 		sut.resurrectCell(1, 0);
@@ -36,7 +36,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testOneByTwoResurrect() {
+	public void oneByTwoResurrect() {
 		createGeneration(1, 2);
 
 		sut.resurrectCell(0, 1);
@@ -46,7 +46,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testTwoByTwoResurrect() {
+	public void twoByTwoResurrect() {
 		createGeneration(2, 2);
 
 		sut.resurrectCell(1, 1);
@@ -58,7 +58,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testThreeByThreeResurrect() {
+	public void threeByThreeResurrect() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(1, 2);
@@ -68,14 +68,14 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testZeroLiveNeighbors() {
+	public void zeroLiveNeighbors() {
 		createGeneration(3, 3);
 
 		assertThat(sut.getLiveNeighborCount(1, 1), is(0));
 	}
 
 	@Test
-	public void testNorthWestLiveNeighbor() {
+	public void northWestLiveNeighbor() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(0, 0);
@@ -84,7 +84,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testNorthWestLiveNeighborShiftRight() {
+	public void northWestLiveNeighborShiftRight() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(1, 0);
@@ -93,7 +93,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testNorthWestLiveNeighborShiftDown() {
+	public void northWestLiveNeighborShiftDown() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(0, 1);
@@ -102,7 +102,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testNorthLiveNeighbor() {
+	public void northLiveNeighbor() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(1, 0);
@@ -111,7 +111,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testNorthEastLiveNeighbor() {
+	public void northEastLiveNeighbor() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(2, 0);
@@ -120,7 +120,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testEastLiveNeighbor() {
+	public void eastLiveNeighbor() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(0, 1);
@@ -129,7 +129,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testWestLiveNeighbor() {
+	public void westLiveNeighbor() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(2, 1);
@@ -138,7 +138,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testSouthWestLiveNeighbor() {
+	public void southWestLiveNeighbor() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(0, 2);
@@ -147,7 +147,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testSouthLiveNeighbor() {
+	public void southLiveNeighbor() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(1, 2);
@@ -156,7 +156,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testSouthEastLiveNeighbor() {
+	public void southEastLiveNeighbor() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(2, 2);
@@ -165,7 +165,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testEightLiveNeighbors() {
+	public void eightLiveNeighbors() {
 		createGeneration(3, 3);
 
 		sut.resurrectCell(0, 0);
@@ -181,7 +181,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testGetLiveNeighborsAtBorders() {
+	public void getLiveNeighborsAtBorders() {
 		createAllAliveGeneration(3, 3);
 
 		assertThat(sut.getLiveNeighborCount(0, 0), is(3));
@@ -195,7 +195,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testDoubleResurrect() {
+	public void doubleResurrect() {
 		createGeneration(2, 1);
 
 		sut.resurrectCell(1, 0);
@@ -205,7 +205,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testKillCell() {
+	public void killCell() {
 		createAllAliveGeneration(1, 1);
 
 		sut.killCell(0, 0);
@@ -214,7 +214,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testKillCellUpdatesLiveNeighborCounts() {
+	public void killCellUpdatesLiveNeighborCounts() {
 		createAllAliveGeneration(3, 3);
 
 		sut.killCell(1, 1);
@@ -231,7 +231,7 @@ public class GenerationTest {
 	}
 
 	@Test
-	public void testDoubleKill() {
+	public void doubleKill() {
 		createAllAliveGeneration(2, 1);
 
 		sut.killCell(1, 0);
@@ -239,7 +239,7 @@ public class GenerationTest {
 
 		assertThat(sut.getLiveNeighborCount(0, 0), is(0));
 	}
-	
+
 	private void createAllAliveGeneration(int width, int height) {
 		createGeneration(width, height);
 
