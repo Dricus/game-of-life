@@ -3,161 +3,254 @@ package nl.dricus.gameoflife.entity;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.stream.IntStream;
-
-import org.junit.Before;
 import org.junit.Test;
 
 public class GenerationTest {
 
-	private static final int WIDTH = 100;
-	private static final int HEIGHT = 50;
+	private Generation sut;
 
-	private Generation cut;
+	@Test
+	public void testOneByOneInitialState() {
+		createGeneration(1, 1);
 
-	@Before
-	public void setUp() {
-		cut = new Generation(WIDTH, HEIGHT);
+		assertThat(sut.isCellAlive(0, 0), is(false));
 	}
 
 	@Test
-	public void initializeWithDimensions() {
-		assertThat(cut.getHeight(), is(HEIGHT));
-		assertThat(cut.getWidth(), is(WIDTH));
+	public void testOneByOneResurrect() {
+		createGeneration(1, 1);
+
+		sut.resurrectCell(0, 0);
+
+		assertThat(sut.isCellAlive(0, 0), is(true));
 	}
 
 	@Test
-	public void initialCellStateShouldBeDead() {
-		assertThat(cut.getCell(0, 0), is(Cell.DEAD));
-		assertThat(cut.getCell(10, 10), is(Cell.DEAD));
+	public void testTwoByOneResurrect() {
+		createGeneration(2, 1);
+
+		sut.resurrectCell(1, 0);
+
+		assertThat(sut.isCellAlive(0, 0), is(false));
+		assertThat(sut.isCellAlive(1, 0), is(true));
 	}
 
 	@Test
-	public void setCellStateAlive() {
-		cut.setCell(0, 0, Cell.ALIVE);
-		cut.setCell(10, 10, Cell.ALIVE);
+	public void testOneByTwoResurrect() {
+		createGeneration(1, 2);
 
-		assertThat(cut.getCell(0, 0), is(Cell.ALIVE));
-		assertThat(cut.getCell(10, 10), is(Cell.ALIVE));
+		sut.resurrectCell(0, 1);
+
+		assertThat(sut.isCellAlive(0, 0), is(false));
+		assertThat(sut.isCellAlive(0, 1), is(true));
 	}
 
 	@Test
-	public void getCellStateOutsideUniverseShouldReturnDead() {
-		makeAllCellsAlive();
+	public void testTwoByTwoResurrect() {
+		createGeneration(2, 2);
 
-		assertThat(cut.getCell(-1, -1), is(Cell.DEAD));
-		assertThat(cut.getCell(WIDTH, HEIGHT), is(Cell.DEAD));
-		assertThat(cut.getCell(10, HEIGHT), is(Cell.DEAD));
-		assertThat(cut.getCell(WIDTH, 10), is(Cell.DEAD));
-	}
+		sut.resurrectCell(1, 1);
 
-	private void makeAllCellsAlive() {
-		IntStream.range(0, HEIGHT).forEach(y -> {
-			IntStream.range(0, WIDTH).forEach(x -> cut.setCell(x, y, Cell.ALIVE));
-		});
+		assertThat(sut.isCellAlive(0, 0), is(false));
+		assertThat(sut.isCellAlive(0, 1), is(false));
+		assertThat(sut.isCellAlive(1, 0), is(false));
+		assertThat(sut.isCellAlive(1, 1), is(true));
 	}
 
 	@Test
-	public void shouldHaveZeroLiveNeighbors() {
-		assertThat(cut.getLiveNeighorCount(10, 10), is(0));
+	public void testThreeByThreeResurrect() {
+		createGeneration(3, 3);
+
+		sut.resurrectCell(1, 2);
+
+		assertThat(sut.isCellAlive(2, 1), is(false));
+		assertThat(sut.isCellAlive(1, 2), is(true));
 	}
 
 	@Test
-	public void shouldSeeWestLiveNeighbor() {
-		cut.setCell(9, 10, Cell.ALIVE);
+	public void testZeroLiveNeighbors() {
+		createGeneration(3, 3);
 
-		assertThat(cut.getLiveNeighorCount(10, 10), is(1));
+		assertThat(sut.getLiveNeighborCount(1, 1), is(0));
 	}
 
 	@Test
-	public void shouldSeeEastLiveNeighbor() {
-		cut.setCell(11, 10, Cell.ALIVE);
+	public void testNorthWestLiveNeighbor() {
+		createGeneration(3, 3);
 
-		assertThat(cut.getLiveNeighorCount(10, 10), is(1));
+		sut.resurrectCell(0, 0);
+
+		assertThat(sut.getLiveNeighborCount(1, 1), is(1));
 	}
 
 	@Test
-	public void shouldSeeEastAndWestLiveNeighbor() {
-		cut.setCell(9, 10, Cell.ALIVE);
-		cut.setCell(11, 10, Cell.ALIVE);
+	public void testNorthWestLiveNeighborShiftRight() {
+		createGeneration(3, 3);
 
-		assertThat(cut.getLiveNeighorCount(10, 10), is(2));
+		sut.resurrectCell(1, 0);
+
+		assertThat(sut.getLiveNeighborCount(2, 1), is(1));
 	}
 
 	@Test
-	public void shouldSeeNorthLiveNeighbor() {
-		cut.setCell(10, 11, Cell.ALIVE);
+	public void testNorthWestLiveNeighborShiftDown() {
+		createGeneration(3, 3);
 
-		assertThat(cut.getLiveNeighorCount(10, 10), is(1));
+		sut.resurrectCell(0, 1);
+
+		assertThat(sut.getLiveNeighborCount(1, 2), is(1));
 	}
 
 	@Test
-	public void shouldSeeSouthLiveNeighbor() {
-		cut.setCell(10, 9, Cell.ALIVE);
+	public void testNorthLiveNeighbor() {
+		createGeneration(3, 3);
 
-		assertThat(cut.getLiveNeighorCount(10, 10), is(1));
+		sut.resurrectCell(1, 0);
+
+		assertThat(sut.getLiveNeighborCount(1, 1), is(1));
 	}
 
 	@Test
-	public void shouldSeeNorthAndSouthLiveNeighbor() {
-		cut.setCell(10, 9, Cell.ALIVE);
-		cut.setCell(10, 11, Cell.ALIVE);
+	public void testNorthEastLiveNeighbor() {
+		createGeneration(3, 3);
 
-		assertThat(cut.getLiveNeighorCount(10, 10), is(2));
+		sut.resurrectCell(2, 0);
+
+		assertThat(sut.getLiveNeighborCount(1, 1), is(1));
 	}
 
 	@Test
-	public void shouldSeeNorthWestLiveNeighbor() {
-		cut.setCell(9, 11, Cell.ALIVE);
+	public void testEastLiveNeighbor() {
+		createGeneration(3, 3);
 
-		assertThat(cut.getLiveNeighorCount(10, 10), is(1));
+		sut.resurrectCell(0, 1);
+
+		assertThat(sut.getLiveNeighborCount(1, 1), is(1));
 	}
 
 	@Test
-	public void shouldSeeNorthEastLiveNeighbor() {
-		cut.setCell(11, 11, Cell.ALIVE);
+	public void testWestLiveNeighbor() {
+		createGeneration(3, 3);
 
-		assertThat(cut.getLiveNeighorCount(10, 10), is(1));
+		sut.resurrectCell(2, 1);
+
+		assertThat(sut.getLiveNeighborCount(1, 1), is(1));
 	}
 
 	@Test
-	public void shouldSeeSouthWestLiveNeighbor() {
-		cut.setCell(9, 9, Cell.ALIVE);
+	public void testSouthWestLiveNeighbor() {
+		createGeneration(3, 3);
 
-		assertThat(cut.getLiveNeighorCount(10, 10), is(1));
+		sut.resurrectCell(0, 2);
+
+		assertThat(sut.getLiveNeighborCount(1, 1), is(1));
 	}
 
 	@Test
-	public void shouldSeeSouthEastLiveNeighbor() {
-		cut.setCell(11, 9, Cell.ALIVE);
+	public void testSouthLiveNeighbor() {
+		createGeneration(3, 3);
 
-		assertThat(cut.getLiveNeighorCount(10, 10), is(1));
+		sut.resurrectCell(1, 2);
+
+		assertThat(sut.getLiveNeighborCount(1, 1), is(1));
 	}
 
 	@Test
-	public void shouldSeeAllLiveNeighbors() {
-		cut.setCell(9, 11, Cell.ALIVE);
-		cut.setCell(10, 11, Cell.ALIVE);
-		cut.setCell(11, 11, Cell.ALIVE);
-		cut.setCell(9, 10, Cell.ALIVE);
-		cut.setCell(11, 10, Cell.ALIVE);
-		cut.setCell(9, 9, Cell.ALIVE);
-		cut.setCell(10, 9, Cell.ALIVE);
-		cut.setCell(11, 9, Cell.ALIVE);
+	public void testSouthEastLiveNeighbor() {
+		createGeneration(3, 3);
 
-		assertThat(cut.getLiveNeighorCount(10, 10), is(8));
+		sut.resurrectCell(2, 2);
+
+		assertThat(sut.getLiveNeighborCount(1, 1), is(1));
 	}
 
 	@Test
-	public void neighborsAtEdges() {
-		assertThat(cut.getLiveNeighorCount(0, 0), is(0));
-		assertThat(cut.getLiveNeighorCount(10, 0), is(0));
-		assertThat(cut.getLiveNeighorCount(WIDTH - 1, 0), is(0));
-		assertThat(cut.getLiveNeighorCount(WIDTH - 1, 10), is(0));
-		assertThat(cut.getLiveNeighorCount(WIDTH - 1, HEIGHT - 1), is(0));
-		assertThat(cut.getLiveNeighorCount(10, HEIGHT - 1), is(0));
-		assertThat(cut.getLiveNeighorCount(0, HEIGHT - 1), is(0));
-		assertThat(cut.getLiveNeighorCount(0, 10), is(0));
+	public void testEightLiveNeighbors() {
+		createGeneration(3, 3);
+
+		sut.resurrectCell(0, 0);
+		sut.resurrectCell(1, 0);
+		sut.resurrectCell(2, 0);
+		sut.resurrectCell(0, 1);
+		sut.resurrectCell(2, 1);
+		sut.resurrectCell(0, 2);
+		sut.resurrectCell(1, 2);
+		sut.resurrectCell(2, 2);
+
+		assertThat(sut.getLiveNeighborCount(1, 1), is(8));
+	}
+
+	@Test
+	public void testGetLiveNeighborsAtBorders() {
+		createAllAliveGeneration(3, 3);
+
+		assertThat(sut.getLiveNeighborCount(0, 0), is(3));
+		assertThat(sut.getLiveNeighborCount(1, 0), is(5));
+		assertThat(sut.getLiveNeighborCount(2, 0), is(3));
+		assertThat(sut.getLiveNeighborCount(0, 1), is(5));
+		assertThat(sut.getLiveNeighborCount(2, 1), is(5));
+		assertThat(sut.getLiveNeighborCount(0, 2), is(3));
+		assertThat(sut.getLiveNeighborCount(1, 2), is(5));
+		assertThat(sut.getLiveNeighborCount(2, 2), is(3));
+	}
+
+	@Test
+	public void testDoubleResurrect() {
+		createGeneration(2, 1);
+
+		sut.resurrectCell(1, 0);
+		sut.resurrectCell(1, 0);
+
+		assertThat(sut.getLiveNeighborCount(0, 0), is(1));
+	}
+
+	@Test
+	public void testKillCell() {
+		createAllAliveGeneration(1, 1);
+
+		sut.killCell(0, 0);
+
+		assertThat(sut.isCellAlive(0, 0), is(false));
+	}
+
+	@Test
+	public void testKillCellUpdatesLiveNeighborCounts() {
+		createAllAliveGeneration(3, 3);
+
+		sut.killCell(1, 1);
+
+		assertThat(sut.getLiveNeighborCount(0, 0), is(2));
+		assertThat(sut.getLiveNeighborCount(1, 0), is(4));
+		assertThat(sut.getLiveNeighborCount(2, 0), is(2));
+		assertThat(sut.getLiveNeighborCount(0, 1), is(4));
+		assertThat(sut.getLiveNeighborCount(2, 1), is(4));
+		assertThat(sut.getLiveNeighborCount(0, 2), is(2));
+		assertThat(sut.getLiveNeighborCount(1, 2), is(4));
+		assertThat(sut.getLiveNeighborCount(2, 2), is(2));
+	}
+
+	@Test
+	public void testDoubleKill() {
+		createAllAliveGeneration(2, 1);
+
+		sut.killCell(1, 0);
+		sut.killCell(1, 0);
+
+		assertThat(sut.getLiveNeighborCount(0, 0), is(0));
+	}
+	
+	private void createAllAliveGeneration(int width, int height) {
+		createGeneration(width, height);
+
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				sut.resurrectCell(col, row);
+			}
+		}
+	}
+
+	private void createGeneration(int width, int height) {
+		sut = new Generation(width, height);
 	}
 
 }

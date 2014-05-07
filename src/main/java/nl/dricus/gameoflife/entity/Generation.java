@@ -1,62 +1,58 @@
 package nl.dricus.gameoflife.entity;
 
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class Generation {
 
-	private final int width;
-	private final int height;
-
-	public Cell[][] cells;
+	private boolean[] alive;
+	private int[] aliveNeighborCount;
+	private int width;
+	private int height;
 
 	public Generation(int width, int height) {
 		this.width = width;
 		this.height = height;
 
-		initializeCellStates();
+		alive = new boolean[width * height];
+		aliveNeighborCount = new int[width * height];
 	}
 
-	private void initializeCellStates() {
-		cells = new Cell[height][width];
-
-		initializeAllCellsToDead();
+	public boolean isCellAlive(int x, int y) {
+		return alive[arrayIndex(x, y)];
 	}
 
-	private void initializeAllCellsToDead() {
-		IntStream.range(0, height).forEach(y -> {
-			IntStream.range(0, width).forEach(x -> setCell(x, y, Cell.DEAD));
-		});
-	}
+	public void resurrectCell(int x, int y) {
+		if (!isCellAlive(x, y)) {
+			alive[arrayIndex(x, y)] = true;
 
-	public int getWidth() {
-		return width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setCell(int x, int y, Cell cellState) {
-		cells[y][x] = cellState;
-	}
-
-	public Cell getCell(int x, int y) {
-		if (x < 0 || y < 0 || x >= width || y >= height)
-			return Cell.DEAD;
-
-		return cells[y][x];
-	}
-
-	public int getLiveNeighorCount(int x, int y) {
-		try (Stream<Cell> neighbors = getNeighbors(x, y)) {
-			return neighbors.mapToInt(state -> state == Cell.ALIVE ? 1 : 0).sum();
+			updateAliveNeighborCountsForNeighborsOf(x, y, 1);
 		}
 	}
 
-	private Stream<Cell> getNeighbors(int x, int y) {
-		return Stream.of(getCell(x - 1, y), getCell(x + 1, y), getCell(x, y - 1), getCell(x, y + 1),
-				getCell(x - 1, y + 1), getCell(x + 1, y + 1), getCell(x - 1, y - 1), getCell(x + 1, y - 1));
+	public void killCell(int x, int y) {
+		if (isCellAlive(x, y)) {
+			alive[arrayIndex(x, y)] = false;
+
+			updateAliveNeighborCountsForNeighborsOf(x, y, -1);
+		}
+	}
+
+	private void updateAliveNeighborCountsForNeighborsOf(int x, int y, int add) {
+		for (int row = max(y - 1, 0); row <= min(y + 1, height - 1); row++) {
+			for (int col = max(x - 1, 0); col <= min(x + 1, width - 1); col++) {
+				aliveNeighborCount[arrayIndex(col, row)] += add;
+			}
+		}
+		aliveNeighborCount[arrayIndex(x, y)]--;
+	}
+
+	private int arrayIndex(int x, int y) {
+		return x + (y * width);
+	}
+
+	public int getLiveNeighborCount(int x, int y) {
+		return aliveNeighborCount[arrayIndex(x, y)];
 	}
 
 }
