@@ -240,6 +240,19 @@ public class GenerationTest {
 		assertThat(sut.getLiveNeighborCount(0, 0), is(0));
 	}
 
+	@Test
+	public void copyConstructorShouldCopyGivenGeneration() {
+		createAllAliveGeneration(3, 3);
+
+		Generation copy = new Generation(sut);
+
+		for (int row = 0; row < sut.getHeight(); row++) {
+			for (int col = 0; col < sut.getWidth(); col++) {
+				assertThat(copy.isCellAlive(col, row), is(sut.isCellAlive(col, row)));
+			}
+		}
+	}
+
 	private void createAllAliveGeneration(int width, int height) {
 		createGeneration(width, height);
 

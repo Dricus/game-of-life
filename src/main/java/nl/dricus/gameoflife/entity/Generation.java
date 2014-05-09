@@ -5,10 +5,11 @@ import static java.lang.Math.min;
 
 public class Generation {
 
+	private final int width;
+	private final int height;
+
 	private boolean[] alive;
 	private int[] aliveNeighborCount;
-	private int width;
-	private int height;
 
 	public Generation(int width, int height) {
 		this.width = width;
@@ -16,6 +17,19 @@ public class Generation {
 
 		alive = new boolean[width * height];
 		aliveNeighborCount = new int[width * height];
+	}
+
+	public Generation(Generation original) {
+		this(original.getWidth(), original.getHeight());
+
+		copyToSelf(original);
+	}
+
+	private void copyToSelf(Generation original) {
+		for (int index = 0; index < width * height; index++) {
+			alive[index] = original.alive[index];
+			aliveNeighborCount[index] = original.aliveNeighborCount[index];
+		}
 	}
 
 	public boolean isCellAlive(int x, int y) {
@@ -53,6 +67,14 @@ public class Generation {
 
 	public int getLiveNeighborCount(int x, int y) {
 		return aliveNeighborCount[arrayIndex(x, y)];
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
 	}
 
 }
