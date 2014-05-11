@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane id="pane" fx:id="anchorPane" pickOnBounds="true" scaleX="1.0" scaleY="1.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="nl.dricus.gameoflife.presentation.display.DisplayPresenter">
+  <children>
+    <Canvas fx:id="canvas" height="600.0" layoutX="0.0" layoutY="0.0" onMouseClicked="#onMouseClicked" scaleX="1.0" scaleY="1.0" width="800.0" />
+  </children>
+</AnchorPane>

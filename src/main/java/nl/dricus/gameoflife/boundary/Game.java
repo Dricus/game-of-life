@@ -1,16 +1,30 @@
 package nl.dricus.gameoflife.boundary;
 
+import java.util.Random;
+
 import nl.dricus.gameoflife.entity.Generation;
 
 public class Game {
 
-	private final int width;
-	private final int height;
+	private int width;
+	private int height;
 
 	private Generation currentGeneration;
 	private Generation previousGeneration;
 
+	public Game() {
+		this(800, 600);
+	}
+
 	public Game(int width, int height) {
+		initializeGeneration(width, height);
+	}
+
+	public void setDimensions(int width, int height) {
+		initializeGeneration(width, height);
+	}
+
+	private void initializeGeneration(int width, int height) {
 		this.width = width;
 		this.height = height;
 
@@ -61,6 +75,17 @@ public class Game {
 
 	private boolean shouldBeResurrected(int row, int col) {
 		return previousGeneration.getLiveNeighborCount(col, row) == 3;
+	}
+
+	public void randomizeCurrentGeneration() {
+		Random random = new Random();
+
+		for (int row = 0; row < currentGeneration.getHeight(); row++) {
+			for (int col = 0; col < currentGeneration.getWidth(); col++) {
+				if (random.nextBoolean())
+					currentGeneration.resurrectCell(col, row);
+			}
+		}
 	}
 
 }
