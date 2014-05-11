@@ -7,3 +7,6 @@ I wanted to do a different kind of kata. One I didn't know the script of in adva
 
 #### Rendering the game in a JavaFX canvas
 As Bob Martin says: UI's require "fiddling". I didn't TDD this one. This learned me some basic JavaFX stuff, like using the [Canvas](http://docs.oracle.com/javafx/2/api/javafx/scene/canvas/Canvas.html) and using [AnimationTimer](http://docs.oracle.com/javafx/2/api/javafx/animation/AnimationTimer.html) and [Timeline](http://docs.oracle.com/javafx/2/api/javafx/animation/Timeline.html).
+
+#### Running the application with Eclipse
+Import the Maven project in Eclipse using File - Import - Maven - Existing Maven Projects. Then run the application by starting nl.dricus.gameoflife.app.Application.
